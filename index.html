@@ -519,22 +519,30 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhdndwbXZweGdja3JudWJucWV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxMjgyNzQsImV4cCI6MjA4MzcwNDI3NH0.M9yc7xf6v0_PqLomBI48v8UF5SncxK78Z9ZhUqsgVBU';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Handle smooth scroll for nav links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
+    // Handle smooth scroll for nav links (more robust version)
+    document.addEventListener('click', function (e) {
+      const anchor = e.target.closest('a');
+      if (!anchor) return;
+
+      const href = anchor.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const targetId = href;
         if (targetId === '#') return;
+
         const targetElement = document.querySelector(targetId);
         if (targetElement) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          // If the element is hidden (like help sections), we might need to wait? 
+          // But usually they are shown when shop loads.
           targetElement.scrollIntoView({
-            behavior: 'smooth'
+            behavior: 'smooth',
+            block: 'start'
           });
-          // Update URL without jump if desired, but scrollIntoView with behavior smooth handles it nicely.
-          // Optional: history.pushState(null, null, targetId);
         }
-      });
-    });
+      }
+    }, true); // Use capture phase to catch clicks early
 
     // Initial Data Placeholders
     let products = [];
@@ -563,13 +571,16 @@
 
     // Get Shop ID from URL (?shop=username)
     function getShopUsername() {
+      // 1. Check Query Param (?shop=username)
       const urlParams = new URLSearchParams(window.location.search);
       const queryShop = urlParams.get('shop');
       if (queryShop) return queryShop;
 
-      // Clean URL support: domain.com/minishop/username
+      // 2. Clean URL support: domain.com/minishop/username
+      // Ignore hash in pathname (pathname doesn't have hash, but let's be safe)
+      const path = window.location.pathname;
       const ignore = ['minishop', 'index.html', 'dashboard.html', 'auth.html', '404.html'];
-      const pathParts = window.location.pathname.split('/').filter(p => p && !ignore.includes(p.toLowerCase()));
+      const pathParts = path.split('/').filter(p => p && !ignore.includes(p.toLowerCase()));
 
       return pathParts.length > 0 ? pathParts[pathParts.length - 1] : null;
     }
