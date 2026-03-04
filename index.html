@@ -297,10 +297,10 @@
               <span>Lihat Koleksi</span>
               <i data-lucide="arrow-right" class="w-5 h-5"></i>
             </a>
-            <a href="#testimonials"
+            <a id="heroWaBtn" href="#" target="_blank"
               class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-surface-50 text-gray-700 font-semibold rounded-2xl border border-surface-300 transition-colors">
-              <i data-lucide="star" class="w-5 h-5 text-brand-500"></i>
-              <span>Testimoni</span>
+              <i data-lucide="message-circle" class="w-5 h-5 text-green-500"></i>
+              <span>Hubungi WhatsApp</span>
             </a>
           </div>
         </div>
@@ -449,14 +449,6 @@
           </div>
         </div>
 
-        <div>
-          <h4 class="font-semibold mb-4">Hubungi Kami</h4>
-          <a id="footerWa" href="#" target="_blank"
-            class="inline-flex items-center gap-2 px-5 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-xl transition-colors">
-            <i data-lucide="message-circle" class="w-5 h-5"></i>
-            <span>WhatsApp</span>
-          </a>
-        </div>
       </div>
 
       <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
@@ -666,6 +658,9 @@
 
         const footerWa = document.getElementById('footerWa');
         if (footerWa) footerWa.href = waUrl;
+
+        const heroWaBtn = document.getElementById('heroWaBtn');
+        if (heroWaBtn) heroWaBtn.href = `${waUrl}?text=${encodeURIComponent('Halo ' + shop.shop_name + ', saya mau tanya tentang produknya.')}`;
 
         const floatingWa = document.getElementById('floatingWa');
         if (floatingWa) {
