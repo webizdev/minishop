@@ -442,14 +442,11 @@
           </ul>
         </div>
 
-        <div>
-          <h4 class="font-semibold mb-4">Bantuan</h4>
-          <ul class="space-y-2 text-sm text-gray-400">
-            <li><a href="#how-to-order" class="hover:text-brand-400 transition-colors">Cara Order</a></li>
-            <li><a href="#shippingSection" class="hover:text-brand-400 transition-colors">Pengiriman</a></li>
-            <li><a href="#returnSection" class="hover:text-brand-400 transition-colors">Pengembalian</a></li>
-            <li><a href="#faq" class="hover:text-brand-400 transition-colors">FAQ</a></li>
-          </ul>
+        <div id="footerMapContainer" class="col-span-1 lg:col-span-2 hidden">
+          <h4 class="font-semibold mb-4">Lokasi Toko</h4>
+          <div id="footerMapSlot"
+            class="w-full h-48 rounded-xl overflow-hidden shadow-lg border border-gray-800 bg-gray-800 relative">
+          </div>
         </div>
 
         <div>
@@ -522,35 +519,7 @@
     // PERSISTENT SHOP STATE
     let currentShopUsername = null;
 
-    // Handle smooth scroll for nav links (more robust version)
-    document.addEventListener('click', function (e) {
-      const anchor = e.target.closest('a');
-      if (!anchor) return;
-
-      const href = anchor.getAttribute('href');
-      // Only handle internal links that stay on the same page
-      if (href && href.startsWith('#')) {
-        const targetId = href;
-        if (targetId === '#') return;
-
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          // STOP EVERYTHING: prevent the browser from stripping the URL path
-          e.preventDefault();
-          e.stopPropagation();
-
-          // Scroll to target smoothly
-          targetElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-
-          // Optional: update hash without full navigation
-          // history.pushState(null, null, targetId);
-          return false;
-        }
-      }
-    }, true); // Capture phase is critical to intercept before browser translates the base URL
+    // Initial Data Placeholders
 
     // Initial Data Placeholders
     let products = [];
@@ -741,25 +710,20 @@
 
       // Check if there are maps
       if (shop.maps_embed) {
-        const footer = document.querySelector('footer > div > div.grid');
-        const mapContainer = document.createElement('div');
-        mapContainer.className = 'col-span-1 lg:col-span-4 mt-8 pt-8 border-t border-gray-800';
-        mapContainer.innerHTML = `
-                <h4 class="font-semibold mb-4">Lokasi Toko</h4>
-                <div class="w-full h-64 rounded-xl overflow-hidden shadow-lg border border-gray-800 bg-gray-800 relative">
-                   ${shop.maps_embed}
-                </div>
-            `;
+        const mapContainer = document.getElementById('footerMapContainer');
+        const mapSlot = document.getElementById('footerMapSlot');
+        if (mapContainer && mapSlot) {
+          mapSlot.innerHTML = shop.maps_embed;
+          mapContainer.classList.remove('hidden');
 
-        // Fix iframe width styling to fit container
-        const iframe = mapContainer.querySelector('iframe');
-        if (iframe) {
-          iframe.style.width = '100%';
-          iframe.style.height = '100%';
-          iframe.style.border = '0';
+          // Fix iframe width styling to fit container
+          const iframe = mapSlot.querySelector('iframe');
+          if (iframe) {
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = '0';
+          }
         }
-
-        footer.appendChild(mapContainer);
       }
 
       // Update Help Sections
