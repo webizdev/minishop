@@ -70,6 +70,10 @@
     }
   </script>
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
     * {
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
@@ -442,8 +446,8 @@
           <h4 class="font-semibold mb-4">Bantuan</h4>
           <ul class="space-y-2 text-sm text-gray-400">
             <li><a href="#how-to-order" class="hover:text-brand-400 transition-colors">Cara Order</a></li>
-            <li><a href="#shipping-returns" class="hover:text-brand-400 transition-colors">Pengiriman</a></li>
-            <li><a href="#shipping-returns" class="hover:text-brand-400 transition-colors">Pengembalian</a></li>
+            <li><a href="#shippingSection" class="hover:text-brand-400 transition-colors">Pengiriman</a></li>
+            <li><a href="#returnSection" class="hover:text-brand-400 transition-colors">Pengembalian</a></li>
             <li><a href="#faq" class="hover:text-brand-400 transition-colors">FAQ</a></li>
           </ul>
         </div>
@@ -514,6 +518,23 @@
     const SUPABASE_URL = 'https://uavwpmvpxgckrnubnqex.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhdndwbXZweGdja3JudWJucWV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxMjgyNzQsImV4cCI6MjA4MzcwNDI3NH0.M9yc7xf6v0_PqLomBI48v8UF5SncxK78Z9ZhUqsgVBU';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Handle smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth'
+          });
+          // Update URL without jump if desired, but scrollIntoView with behavior smooth handles it nicely.
+          // Optional: history.pushState(null, null, targetId);
+        }
+      });
+    });
 
     // Initial Data Placeholders
     let products = [];
