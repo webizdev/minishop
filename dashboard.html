@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minishop - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand': { 50: '#fff7ed', 100: '#ffedd5', 500: '#f97316', 600: '#ea580c' },
+                        'surface': { 50: '#fefdfb', 100: '#faf8f5', 200: '#f5f2ed' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-surface-50 min-h-screen text-gray-800 hidden" id="appBody">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-surface-200 fixed top-0 w-full z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center">
+                        <i data-lucide="store" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="text-xl font-bold text-gray-900">Seller Dashboard</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a id="shopLink" href="#" target="_blank"
+                        class="hidden items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700 bg-brand-50 px-4 py-2 rounded-lg transition-colors">
+                        <i data-lucide="external-link" class="w-4 h-4"></i>
+                        <span>View Shop</span>
+                    </a>
+                    <button id="logoutBtn"
+                        class="items-center gap-2 text-sm font-semibold text-gray-600 hover:text-red-600 transition-colors hidden sm:flex">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
+
+        <!-- Alerts -->
+        <div id="dashboardAlert" class="hidden mb-6 p-4 rounded-xl text-sm font-medium border"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Left Column: Shop Profile -->
+            <div class="lg:col-span-1 space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-surface-200 p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <i data-lucide="settings" class="w-5 h-5 text-brand-500"></i>
+                        Shop Setup
+                    </h2>
+
+                    <form id="shopForm" class="space-y-4">
+                        <input type="hidden" id="shopId">
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Username (URL)</label>
+                            <div class="flex rounded-lg shadow-sm">
+                                <span
+                                    class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-200 bg-gray-50 text-gray-500 sm:text-sm">
+                                    minishop.id/
+                                </span>
+                                <input type="text" id="shopUsername" required pattern="[a-zA-Z0-9_-]+"
+                                    class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-lg border border-gray-200 focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
+                                    placeholder="myhijabstore">
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Hanya huruf, angka, min, underscore. Digunakan untuk
+                                link shop kamu.</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Toko</label>
+                            <input type="text" id="shopName" required
+                                class="w-full px-4 py-2 bg-surface-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 sm:text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nomor WhatsApp CTA</label>
+                            <input type="text" id="shopWa" required placeholder="6281234567890"
+                                class="w-full px-4 py-2 bg-surface-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 sm:text-sm">
+                            <p class="text-xs text-gray-500 mt-1">Gunakan kode negara (Contoh: 62812...)</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Google Maps Embed HTML
+                                (Opsional)</label>
+                            <textarea id="shopMaps" rows="3"
+                                placeholder='<iframe src="https://www.google.com/maps/embed?..." ></iframe>'
+                                class="w-full px-4 py-2 bg-surface-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 sm:text-sm font-mono text-xs"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Judul Hero Homepage</label>
+                            <input type="text" id="shopHeroTitle" placeholder="Tampil Cantik Setiap Hari"
+                                class="w-full px-4 py-2 bg-surface-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 sm:text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Hero</label>
+                            <textarea id="shopHeroDesc" rows="3"
+                                class="w-full px-4 py-2 bg-surface-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 sm:text-sm"></textarea>
+                        </div>
+
+                        <button type="submit" id="saveShopBtn"
+                            class="w-full py-2.5 bg-gray-900 hover:bg-black text-white font-semibold rounded-xl transition-colors text-sm">
+                            Save Shop Profile
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Column: Products & Testimonials -->
+            <div class="lg:col-span-2 space-y-6">
+
+                <!-- Products -->
+                <div class="bg-white rounded-2xl shadow-sm border border-surface-200 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                            <i data-lucide="package" class="w-5 h-5 text-brand-500"></i>
+                            Products
+                        </h2>
+                        <button onclick="openProductModal()"
+                            class="flex items-center gap-2 px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold rounded-lg transition-colors">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            Add Product
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-surface-50 border-b border-surface-200">
+                                <tr>
+                                    <th class="px-4 py-3">Product</th>
+                                    <th class="px-4 py-3">Price</th>
+                                    <th class="px-4 py-3">Category</th>
+                                    <th class="px-4 py-3 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productList">
+                                <tr>
+                                    <td colspan="4" class="px-4 py-8 text-center text-gray-400">Loading products...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Testimonials -->
+                <div class="bg-white rounded-2xl shadow-sm border border-surface-200 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-bold text-gray-900 flex items-center gap-2">
+                            <i data-lucide="message-square" class="w-5 h-5 text-brand-500"></i>
+                            Testimonials
+                        </h2>
+                        <button onclick="openTestimonialModal()"
+                            class="flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-black text-white text-sm font-semibold rounded-lg transition-colors">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            Add Testimonial
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="testimonialList">
+                        <p class="text-gray-400 text-sm">Loading testimonials...</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="fixed inset-0 z-50 bg-black/50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden relative">
+            <div class="px-6 py-4 border-b border-surface-200 flex justify-between items-center">
+                <h3 class="font-bold text-lg" id="productModalTitle">Add Product</h3>
+                <button onclick="closeModals()" class="text-gray-400 hover:text-gray-600"><i data-lucide="x"
+                        class="w-5 h-5"></i></button>
+            </div>
+            <form id="productForm" class="p-6 space-y-4">
+                <input type="hidden" id="productId">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                    <input type="text" id="prodName" required
+                        class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Price (Rp)</label>
+                    <input type="number" id="prodPrice" required
+                        class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                    <select id="prodCategory" required
+                        class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-500">
+                        <option value="pashmina">Pashmina</option>
+                        <option value="segiempat">Segi Empat</option>
+                        <option value="instan">Instan / Inner</option>
+                        <option value="syari">Syar'i</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                    <input type="url" id="prodImage" required
+                        class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-500"
+                        placeholder="https://...">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Badge (Optional)</label>
+                    <input type="text" id="prodBadge"
+                        class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-brand-500"
+                        placeholder="e.g. Best Seller">
+                </div>
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="closeModals()"
+                        class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium text-sm">Cancel</button>
+                    <button type="submit"
+                        class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg font-medium text-sm">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        const SUPABASE_URL = 'https://uavwpmvpxgckrnubnqex.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhdndwbXZweGdja3JudWJucWV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxMjgyNzQsImV4cCI6MjA4MzcwNDI3NH0.M9yc7xf6v0_PqLomBI48v8UF5SncxK78Z9ZhUqsgVBU';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentUser = null;
+        let currentShop = null;
+
+        // Initialize App
+        async function initApp() {
+            lucide.createIcons();
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (!session) {
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            currentUser = session.user;
+            document.getElementById('appBody').classList.remove('hidden');
+
+            await loadShop();
+        }
+
+        function showDashboardAlert(message, type = 'success') {
+            const alertBox = document.getElementById('dashboardAlert');
+            alertBox.textContent = message;
+            alertBox.className = `mb-6 p-4 rounded-xl text-sm font-medium block ${type === 'error' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-green-50 text-green-600 border-green-200'
+                }`;
+            setTimeout(() => alertBox.classList.add('hidden'), 5000);
+        }
+
+        // Shop Profile Logic
+        async function loadShop() {
+            try {
+                const { data, error } = await supabase
+                    .from('minishop_shops')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') throw error; // PGRST116 is not found
+
+                if (data) {
+                    currentShop = data;
+                    document.getElementById('shopId').value = data.id;
+                    document.getElementById('shopUsername').value = data.username;
+                    document.getElementById('shopName').value = data.shop_name;
+                    document.getElementById('shopWa').value = data.whatsapp_number || '';
+                    document.getElementById('shopMaps').value = data.maps_embed || '';
+                    document.getElementById('shopHeroTitle').value = data.hero_title || '';
+                    document.getElementById('shopHeroDesc').value = data.hero_desc || '';
+
+                    const shopLink = document.getElementById('shopLink');
+                    shopLink.href = `index.html?shop=${data.username}`;
+                    shopLink.classList.remove('hidden');
+                    shopLink.classList.add('flex');
+
+                    loadProducts();
+                    loadTestimonials();
+                } else {
+                    showDashboardAlert('Welcome! Please set up your shop profile first to start adding products.', 'error');
+                }
+            } catch (err) {
+                console.error(err);
+                showDashboardAlert('Failed to load shop data.', 'error');
+            }
+        }
+
+        document.getElementById('shopForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const shopData = {
+                user_id: currentUser.id,
+                username: document.getElementById('shopUsername').value.toLowerCase().replace(/[^a-z0-9_-]/g, ''),
+                shop_name: document.getElementById('shopName').value,
+                whatsapp_number: document.getElementById('shopWa').value,
+                maps_embed: document.getElementById('shopMaps').value,
+                hero_title: document.getElementById('shopHeroTitle').value,
+                hero_desc: document.getElementById('shopHeroDesc').value,
+            };
+
+            try {
+                let result;
+                if (currentShop) {
+                    result = await supabase.from('minishop_shops').update(shopData).eq('id', currentShop.id).select();
+                } else {
+                    result = await supabase.from('minishop_shops').insert([shopData]).select();
+                }
+
+                if (result.error) throw result.error;
+                showDashboardAlert('Shop profile saved successfully!');
+                currentShop = result.data[0];
+                document.getElementById('shopId').value = currentShop.id;
+
+                const shopLink = document.getElementById('shopLink');
+                shopLink.href = `index.html?shop=${currentShop.username}`;
+                shopLink.classList.remove('hidden');
+                shopLink.classList.add('flex');
+            } catch (err) {
+                showDashboardAlert(err.message || 'Error saving shop profile. Username might be taken.', 'error');
+            }
+        });
+
+        // Products Logic
+        async function loadProducts() {
+            if (!currentShop) return;
+            const { data, error } = await supabase.from('minishop_products').select('*').eq('shop_id', currentShop.id).order('created_at', { ascending: false });
+
+            const tbody = document.getElementById('productList');
+            if (error) {
+                tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-red-500">Failed to load products</td></tr>`;
+                return;
+            }
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="px-4 py-8 text-center text-gray-500">No products found. Add your first product!</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.map(p => `
+                <tr class="border-b border-surface-200 hover:bg-surface-50">
+                    <td class="px-4 py-3 font-medium text-gray-900 flex items-center gap-3">
+                        <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover">
+                        ${p.name}
+                    </td>
+                    <td class="px-4 py-3 text-gray-600">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</td>
+                    <td class="px-4 py-3"><span class="px-2 py-1 bg-gray-100 rounded-lg text-xs font-semibold">${p.category}</span></td>
+                    <td class="px-4 py-3 text-right">
+                        <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:text-red-700 font-semibold text-xs">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openProductModal() {
+            if (!currentShop) {
+                showDashboardAlert("Please save your Shop Setup first!", "error");
+                return;
+            }
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('productModal').classList.remove('hidden');
+        }
+
+        function closeModals() {
+            document.getElementById('productModal').classList.add('hidden');
+        }
+
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                shop_id: currentShop.id,
+                name: document.getElementById('prodName').value,
+                price: parseFloat(document.getElementById('prodPrice').value),
+                category: document.getElementById('prodCategory').value,
+                image: document.getElementById('prodImage').value,
+                badge: document.getElementById('prodBadge').value || null,
+            };
+
+            try {
+                const { error } = await supabase.from('minishop_products').insert([payload]);
+                if (error) throw error;
+                showDashboardAlert("Product added!");
+                closeModals();
+                loadProducts();
+            } catch (err) {
+                alert("Error adding product: " + err.message);
+            }
+        });
+
+        async function deleteProduct(id) {
+            if (confirm("Delete this product?")) {
+                await supabase.from('minishop_products').delete().eq('id', id);
+                loadProducts();
+                showDashboardAlert("Product deleted!");
+            }
+        }
+
+        // Testimonials placeholder (keep simple for now)
+        function loadTestimonials() {
+            document.getElementById('testimonialList').innerHTML = `<p class="text-xs text-gray-500 italic p-4">Testimonial management coming soon. For now, data is tied to your shop.</p>`;
+        }
+        function openTestimonialModal() {
+            alert("Testimonial management feature is in development!");
+        }
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            window.location.href = 'auth.html';
+        });
+
+        initApp();
+    </script>
+</body>
+
+</html>

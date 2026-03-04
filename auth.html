@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minishop - Seller Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-surface-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 border border-gray-100 relative overflow-hidden">
+
+        <script>
+            // Theme configuration injected
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'brand': { 50: '#fff7ed', 100: '#ffedd5', 500: '#f97316', 600: '#ea580c' },
+                            'surface': { 50: '#fefdfb', 100: '#faf8f5', 200: '#f5f2ed' }
+                        }
+                    }
+                }
+            }
+        </script>
+
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-400 to-brand-600"></div>
+
+        <div class="text-center mb-6">
+            <div
+                class="w-16 h-16 rounded-2xl bg-brand-50 flex items-center justify-center mx-auto mb-4 border border-brand-100">
+                <i data-lucide="store" class="w-8 h-8 text-brand-500"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900">Minishop Seller</h1>
+            <p class="text-sm text-gray-500 mt-2 text-center" id="modeDescription">Welcome back! Sign in to manage your
+                shop.</p>
+        </div>
+
+        <!-- Custom Tabs -->
+        <div class="flex bg-surface-100 p-1 rounded-xl mb-6">
+            <button type="button" id="tabLogin"
+                class="flex-1 py-2 text-sm font-semibold rounded-lg bg-white shadow-sm text-gray-900 transition-all">
+                Sign In
+            </button>
+            <button type="button" id="tabRegister"
+                class="flex-1 py-2 text-sm font-semibold rounded-lg text-gray-500 hover:text-gray-900 transition-all">
+                Register
+            </button>
+        </div>
+
+        <div id="alertBox" class="hidden mb-6 p-4 rounded-xl text-sm font-medium"></div>
+
+        <!-- Login / Register Form -->
+        <form id="authForm" class="space-y-5" novalidate>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Email <span
+                        class="text-red-500">*</span></label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i data-lucide="mail" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                    <input type="email" id="email"
+                        class="pl-10 w-full px-4 py-3 bg-surface-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors"
+                        placeholder="hello@example.com">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Password <span
+                        class="text-red-500">*</span></label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i data-lucide="lock" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                    <input type="password" id="password"
+                        class="pl-10 w-full px-4 py-3 bg-surface-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors"
+                        placeholder="••••••••">
+                </div>
+                <p class="text-xs text-gray-500 mt-2 hidden" id="passwordHint">Password must be at least 6 characters.
+                </p>
+            </div>
+
+            <button type="submit" id="submitBtn"
+                class="w-full flex items-center justify-center gap-2 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl transition-colors disabled:opacity-70 disabled:cursor-not-allowed">
+                <span>Sign In</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+        </form>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Initialize Supabase
+        const SUPABASE_URL = 'https://uavwpmvpxgckrnubnqex.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhdndwbXZweGdja3JudWJucWV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxMjgyNzQsImV4cCI6MjA4MzcwNDI3NH0.M9yc7xf6v0_PqLomBI48v8UF5SncxK78Z9ZhUqsgVBU';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let isLogin = true;
+
+        const form = document.getElementById('authForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const submitText = submitBtn.querySelector('span');
+        const tabLogin = document.getElementById('tabLogin');
+        const tabRegister = document.getElementById('tabRegister');
+        const alertBox = document.getElementById('alertBox');
+        const modeDesc = document.getElementById('modeDescription');
+        const passHint = document.getElementById('passwordHint');
+
+        function showAlert(message, type = 'error') {
+            console.log("Showing alert:", message, type);
+            alertBox.textContent = message;
+            alertBox.classList.remove('hidden');
+            alertBox.className = `mb-6 p-4 rounded-xl text-sm font-medium block ${type === 'error' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-green-50 text-green-600 border border-green-100'
+                }`;
+        }
+
+        async function checkSession() {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (session) {
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (err) {
+                console.error("Session check failed (might be file:// protocol issue):", err);
+            }
+        }
+        checkSession();
+
+        function setMode(loginMode) {
+            isLogin = loginMode;
+            alertBox.classList.add('hidden');
+
+            if (isLogin) {
+                tabLogin.className = "flex-1 py-2 text-sm font-semibold rounded-lg bg-white shadow-sm text-gray-900 transition-all";
+                tabRegister.className = "flex-1 py-2 text-sm font-semibold rounded-lg text-gray-500 hover:text-gray-900 transition-all bg-transparent shadow-none";
+                submitText.textContent = 'Sign In';
+                modeDesc.textContent = 'Welcome back! Sign in to manage your shop.';
+                passHint.classList.add('hidden');
+            } else {
+                tabRegister.className = "flex-1 py-2 text-sm font-semibold rounded-lg bg-white shadow-sm text-gray-900 transition-all";
+                tabLogin.className = "flex-1 py-2 text-sm font-semibold rounded-lg text-gray-500 hover:text-gray-900 transition-all bg-transparent shadow-none";
+                submitText.textContent = 'Create Shop Account';
+                modeDesc.textContent = 'Create a new account to open your Minishop.';
+                passHint.classList.remove('hidden');
+            }
+        }
+
+        tabLogin.addEventListener('click', () => setMode(true));
+        tabRegister.addEventListener('click', () => setMode(false));
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Manual validation to avoid silent HTML5 validation issues
+            if (!email) {
+                showAlert('Please enter your email.');
+                return;
+            }
+            if (!password || password.length < 6) {
+                showAlert('Password must be at least 6 characters.');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitText.textContent = 'Please wait...';
+            alertBox.classList.add('hidden');
+
+            try {
+                console.log("Submitting form, mode:", isLogin ? "Login" : "Register");
+
+                if (isLogin) {
+                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                    if (error) {
+                        console.error('Login Error:', error);
+                        throw error;
+                    }
+                    console.log('Login Success, redirecting...');
+                    window.location.href = 'dashboard.html';
+                } else {
+                    const { data, error } = await supabase.auth.signUp({ email, password });
+                    if (error) {
+                        console.error('Signup Error:', error);
+                        throw error;
+                    }
+                    console.log('Signup Result:', data);
+
+                    if (data.session) {
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        showAlert('Registration successful! Please check your email inbox to confirm your account.', 'success');
+                    }
+                }
+            } catch (error) {
+                showAlert(error.message || 'An error occurred during authentication.');
+            } finally {
+                submitBtn.disabled = false;
+                submitText.textContent = isLogin ? 'Sign In' : 'Create Shop Account';
+            }
+        });
+    </script>
+</body>
+
+</html>
