@@ -492,11 +492,24 @@
                     const categories = data.categories || ["Pashmina", "Segi Empat", "Instan", "Aksesoris"];
                     renderCategories(categories);
 
-                    document.getElementById('shopHowToOrder').value = data.how_to_order || '';
-                    document.getElementById('shopShipping').value = data.shipping_info || '';
-                    document.getElementById('shopReturn').value = data.return_policy || '';
+                    const defaultHowToOrder = "1. Pilih Produk\nCari dan pilih produk favoritmu dari katalog kami.\n2. Masukan Keranjang\nKlik tombol \"Tambah Keranjang\" pada produk yang diinginkan.\n3. Checkout WhatsApp\nKlik ikon keranjang lalu pilih \"Checkout via WhatsApp\".\n4. Konfirmasi & Bayar\nAdmin akan mengonfirmasi pesanan dan detail pembayaran.";
 
-                    faqData = data.faq || [];
+                    const defaultShipping = "• Pengiriman dilakukan setiap hari Senin - Sabtu.\n• Pesanan sebelum jam 15.00 WIB dikirim di hari yang sama.\n• Kami menggunakan jasa kurir JNE, J&T, dan Sicepat.\n• Nomor resi akan diinfokan via WhatsApp segera setelah dikirim.";
+
+                    const defaultReturn = "• Retur berlaku jika barang cacat atau salah kirim.\n• Klaim maksimal 2 hari setelah barang diterima.\n• Wajib menyertakan video unboxing tanpa jeda.\n• Ongkos kirim retur sepenuhnya ditanggung oleh kami.";
+
+                    const defaultFaq = [
+                        { q: "Apakah produk selalu ready stok?", a: "Hampir semua produk yang tampil di katalog adalah ready stok. Namun untuk memastikan, admin akan mengonfirmasi kembali saat Anda checkout." },
+                        { q: "Bagaimana cara mengetahui bahan hijab?", a: "Setiap nama produk biasanya menyertakan jenis bahan. Jika ragu, Anda bisa bertanya langsung via WhatsApp sebelum membeli." },
+                        { q: "Berapa lama waktu pengiriman?", a: "Untuk wilayah Pulau Jawa estimasi 2-3 hari kerja, sedangkan luar Pulau Jawa estimasi 3-7 hari kerja tergantung lokasi." },
+                        { q: "Apakah bisa COD?", a: "Saat ini kami hanya melayani pembayaran via transfer bank yang divalidasi langsung oleh admin toko kami." }
+                    ];
+
+                    document.getElementById('shopHowToOrder').value = data.how_to_order || defaultHowToOrder;
+                    document.getElementById('shopShipping').value = data.shipping_info || defaultShipping;
+                    document.getElementById('shopReturn').value = data.return_policy || defaultReturn;
+
+                    faqData = (data.faq && data.faq.length > 0) ? data.faq : defaultFaq;
                     renderFaqItems();
 
                     const shopLink = document.getElementById('shopLink');
