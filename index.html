@@ -288,7 +288,8 @@
             Tampil Cantik<br>
             <span class="text-gradient">Setiap Hari</span>
           </h1>
-          <p class="text-lg sm:text-xl text-gray-600 mb-8 max-w-lg mx-auto lg:mx-0 animate-fade-up stagger-2">
+          <p id="heroDesc"
+            class="text-lg sm:text-xl text-gray-600 mb-8 max-w-lg mx-auto lg:mx-0 animate-fade-up stagger-2">
             Anti gerah, tetap cantik naturally. Koleksi hijab premium dengan kualitas terbaik untuk aktivitas harimu.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-up stagger-3">
@@ -690,6 +691,9 @@
       // Update Hero
       const heroTitleEl = document.querySelector('h1.text-4xl');
       if (heroTitleEl && shop.hero_title) heroTitleEl.innerHTML = shop.hero_title;
+
+      const heroDescEl = document.getElementById('heroDesc');
+      if (heroDescEl && shop.hero_desc) heroDescEl.innerHTML = shop.hero_desc;
 
       const footerDescEl = document.querySelector('footer p.text-gray-400');
       if (footerDescEl && shop.hero_desc) footerDescEl.innerHTML = shop.hero_desc;

@@ -8,7 +8,15 @@
         // Single Page Apps for GitHub Pages
         // MIT License
         // https://github.com/rafgraph/spa-github-pages
-        var pathSegmentsToKeep = 1; // Change to 0 if using a custom domain or 1 if using repo subfolder (e.g. /minishop/)
+        
+        // Automatically detect if we are in a subfolder (like /minishop/)
+        var pathSegmentsToKeep = 0;
+        if (window.location.hostname.includes('github.io')) {
+            const pathParts = window.location.pathname.split('/').filter(p => p);
+            if (pathParts[0] === 'minishop') {
+                pathSegmentsToKeep = 1;
+            }
+        }
 
         var l = window.location;
         l.replace(
