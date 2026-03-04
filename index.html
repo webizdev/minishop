@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hijab Cantik - Anti gerah, tetap cantik naturally</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'display': ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            'brand': {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              300: '#fdba74',
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+            },
+            'surface': {
+              50: '#fefdfb',
+              100: '#faf8f5',
+              200: '#f5f2ed',
+              300: '#ebe6de',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .animate-fade-up {
+      animation: fadeSlideUp 0.6s ease-out forwards;
+      opacity: 0;
+    }
+    
+    .animate-scale-in {
+      animation: scaleIn 0.4s ease-out forwards;
+    }
+    
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .shimmer-badge {
+      background: linear-gradient(90deg, #f97316 0%, #fbbf24 50%, #f97316 100%);
+      background-size: 200% 100%;
+      animation: shimmer 2s linear infinite;
+    }
+    
+    .product-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .product-card:hover {
+      transform: translateY(-8px);
+    }
+    
+    .product-card:hover .product-image {
+      transform: scale(1.08);
+    }
+    
+    .product-image {
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn-cart {
+      transition: all 0.3s ease;
+    }
+    
+    .btn-cart:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px -5px rgba(249, 115, 22, 0.4);
+    }
+    
+    .btn-cart:active {
+      transform: translateY(0);
+    }
+    
+    .cart-panel {
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .cart-panel.open {
+      transform: translateX(0);
+    }
+    
+    .cart-overlay {
+      transition: opacity 0.3s ease;
+    }
+    
+    .tab-btn.active {
+      color: #ea580c;
+      border-color: #ea580c;
+    }
+    
+    .hero-gradient {
+      background: linear-gradient(135deg, #fefdfb 0%, #fff7ed 50%, #ffedd5 100%);
+    }
+    
+    .text-gradient {
+      background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    .stagger-4 { animation-delay: 0.4s; }
+    
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
+    :focus-visible {
+      outline: 2px solid #f97316;
+      outline-offset: 2px;
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-surface-50 text-gray-800 antialiased">
+  
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-surface-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20">
+        <a href="#" class="flex items-center gap-2">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center">
+            <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-xl font-bold text-gray-900">Hijab Cantik</span>
+        </a>
+        
+        <div class="flex items-center gap-3">
+          <button id="cartBtn" class="relative p-2.5 rounded-xl bg-surface-100 hover:bg-surface-200 transition-colors" aria-label="Keranjang belanja">
+            <i data-lucide="shopping-bag" class="w-5 h-5 text-gray-700"></i>
+            <span id="cartCount" class="absolute -top-1 -right-1 w-5 h-5 bg-brand-500 text-white text-xs font-bold rounded-full flex items-center justify-center hidden">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-gradient pt-24 sm:pt-32 pb-12 sm:pb-20 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+        <div class="flex-1 text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full shimmer-badge text-white text-sm font-semibold mb-6 animate-fade-up">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Ramadhan Sale 50% OFF</span>
+          </div>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6 animate-fade-up stagger-1">
+            Tampil Cantik<br>
+            <span class="text-gradient">Setiap Hari</span>
+          </h1>
+          <p class="text-lg sm:text-xl text-gray-600 mb-8 max-w-lg mx-auto lg:mx-0 animate-fade-up stagger-2">
+            Anti gerah, tetap cantik naturally. Koleksi hijab premium dengan kualitas terbaik untuk aktivitas harimu.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-up stagger-3">
+            <a href="#products" class="btn-cart inline-flex items-center justify-center gap-2 px-8 py-4 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-2xl shadow-lg">
+              <span>Lihat Koleksi</span>
+              <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </a>
+            <a href="#testimonials" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-surface-50 text-gray-700 font-semibold rounded-2xl border border-surface-300 transition-colors">
+              <i data-lucide="star" class="w-5 h-5 text-brand-500"></i>
+              <span>Testimoni</span>
+            </a>
+          </div>
+        </div>
+        
+        <div class="flex-1 relative animate-fade-up stagger-4">
+          <div class="relative w-72 h-72 sm:w-96 sm:h-96 mx-auto">
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-300 to-brand-500 rounded-full opacity-20 blur-3xl animate-float"></div>
+            <img 
+              src="https://deenay.id/cdn/shop/files/DSCF3070_800x.jpg?v=1708741386" 
+              alt="Koleksi Hijab Premium" 
+              class="relative w-full h-full object-cover rounded-3xl shadow-2xl"
+            >
+            <div class="absolute -bottom-4 -right-4 bg-white rounded-2xl shadow-xl p-4 flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-brand-100 flex items-center justify-center">
+                <i data-lucide="truck" class="w-6 h-6 text-brand-600"></i>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-gray-900">Gratis Ongkir</p>
+                <p class="text-xs text-gray-500">Min. belanja Rp100rb</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category Tabs -->
+  <section class="sticky top-16 sm:top-20 z-40 bg-white border-b border-surface-200 py-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-2" role="tablist">
+        <button class="tab-btn active flex-shrink-0 px-5 py-2.5 rounded-xl font-medium text-sm border-2 border-brand-500 bg-brand-50 text-brand-600 transition-all" data-category="all" role="tab" aria-selected="true">
+          Semua
+        </button>
+        <button class="tab-btn flex-shrink-0 px-5 py-2.5 rounded-xl font-medium text-sm border-2 border-transparent bg-surface-100 text-gray-600 hover:bg-surface-200 transition-all" data-category="pashmina" role="tab" aria-selected="false">
+          Pashmina
+        </button>
+        <button class="tab-btn flex-shrink-0 px-5 py-2.5 rounded-xl font-medium text-sm border-2 border-transparent bg-surface-100 text-gray-600 hover:bg-surface-200 transition-all" data-category="segiempat" role="tab" aria-selected="false">
+          Segi Empat
+        </button>
+        <button class="tab-btn flex-shrink-0 px-5 py-2.5 rounded-xl font-medium text-sm border-2 border-transparent bg-surface-100 text-gray-600 hover:bg-surface-200 transition-all" data-category="instan" role="tab" aria-selected="false">
+          Instan / Inner
+        </button>
+        <button class="tab-btn flex-shrink-0 px-5 py-2.5 rounded-xl font-medium text-sm border-2 border-transparent bg-surface-100 text-gray-600 hover:bg-surface-200 transition-all" data-category="syari" role="tab" aria-selected="false">
+          Syar'i
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Grid -->
+  <section id="products" class="py-12 sm:py-20 bg-surface-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Koleksi Terbaik</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">Pilihan hijab berkualitas dengan harga terjangkau. Tersedia berbagai model dan bahan untuk kebutuhan sehari-harimu.</p>
+      </div>
+      
+      <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <!-- Products will be rendered here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="py-12 sm:py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Kata Mereka</h2>
+        <p class="text-gray-600">Ribuan pelanggan puas dengan produk kami</p>
+      </div>
+      
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="testimonialGrid">
+        <!-- Testimonials will be rendered here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center">
+              <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+            </div>
+            <span class="text-xl font-bold">Hijab Cantik</span>
+          </div>
+          <p class="text-gray-400 text-sm">Anti gerah, tetap cantik naturally. Hijab berkualitas dengan harga terjangkau.</p>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">Produk</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#" class="hover:text-brand-400 transition-colors">Pashmina</a></li>
+            <li><a href="#" class="hover:text-brand-400 transition-colors">Segi Empat</a></li>
+            <li><a href="#" class="hover:text-brand-400 transition-colors">Instan</a></li>
+            <li><a href="#" class="hover:text-brand-400 transition-colors">Syar'i</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">Bantuan</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#" class="hover:text-brand-400 transition-colors">Cara Order</a></li>
+            <li><a href="#" class="hover:text-brand-400 transition-colors">Pengiriman</a></li>
+            <li><a href="#" class="hover:text-brand-400 transition-colors">Pengembalian</a></li>
+            <li><a href="#" class="hover:text-brand-400 transition-colors">FAQ</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4">Hubungi Kami</h4>
+          <a href="https://wa.me/6281234567890" target="_blank" class="inline-flex items-center gap-2 px-5 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-xl transition-colors">
+            <i data-lucide="message-circle" class="w-5 h-5"></i>
+            <span>WhatsApp</span>
+          </a>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
+        <p>&copy; 2025 Hijab Cantik. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cart Panel -->
+  <div id="cartOverlay" class="cart-overlay fixed inset-0 bg-black/50 z-50 opacity-0 pointer-events-none"></div>
+  <aside id="cartPanel" class="cart-panel fixed top-0 right-0 h-full w-full sm:w-96 bg-white z-50 shadow-2xl translate-x-full">
+    <div class="flex flex-col h-full">
+      <div class="flex items-center justify-between p-6 border-b border-surface-200">
+        <h3 class="text-xl font-bold text-gray-900">Keranjang</h3>
+        <button id="closeCart" class="p-2 rounded-xl hover:bg-surface-100 transition-colors" aria-label="Tutup keranjang">
+          <i data-lucide="x" class="w-6 h-6 text-gray-500"></i>
+        </button>
+      </div>
+      
+      <div id="cartItems" class="flex-1 overflow-y-auto p-6">
+        <!-- Cart items will be rendered here -->
+      </div>
+      
+      <div class="p-6 border-t border-surface-200 bg-surface-50">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-gray-600">Total</span>
+          <span id="cartTotal" class="text-2xl font-bold text-gray-900">Rp 0</span>
+        </div>
+        <div class="space-y-3">
+          <button id="checkoutBtn" class="w-full btn-cart inline-flex items-center justify-center gap-2 px-6 py-4 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-2xl">
+            <i data-lucide="message-circle" class="w-5 h-5"></i>
+            <span>Checkout via WhatsApp</span>
+          </button>
+          <button id="continueShoppingBtn" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-surface-100 text-gray-700 font-semibold rounded-2xl border border-surface-300 transition-colors">
+            <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            <span>Lanjut Belanja</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/6281234567890?text=Halo%20kak%2C%20saya%20mau%20tanya%20tentang%20produk%20hijab" target="_blank" class="fixed bottom-6 right-6 z-40 w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110" aria-label="Hubungi via WhatsApp">
+    <i data-lucide="message-circle" class="w-6 h-6"></i>
+  </a>
+
+  <script>
+    // Product Data dengan gambar yang sudah diacak
+    const products = [
+      { id: 1, name: 'Hijab Pasmina Ceruty Premium', price: 45000, category: 'pashmina', image: 'https://m.media-amazon.com/images/I/61KDgGIhrQL._AC_UY1000_.jpg', badge: 'Best Seller' },
+      { id: 2, name: 'Hijab Segi Empat Katun Linen', price: 55000, category: 'segiempat', image: 'https://deenay.id/cdn/shop/files/DSCF3070_800x.jpg?v=1708741386', badge: null },
+      { id: 3, name: 'Hijab Pashmina Voal Premium Bercorde', price: 65000, category: 'pashmina', image: 'https://littleblackhijab.com/wp-content/uploads/2020/07/1.jpg', badge: 'New' },
+      { id: 4, name: 'Hijab Instan Ringkas (Ready to Wear)', price: 50000, category: 'instan', image: 'https://dynamic.zacdn.com/PswGqcFkVWUkqS7IArfdBmAEG5s=/filters:quality(70):format(webp)/https://static-id.zacdn.com/p/cantik-kerudung-0669-6409005-1.jpg', badge: 'Praktis' },
+      { id: 5, name: 'Hijab Bergo Crinkle Rantai Gold', price: 60000, category: 'instan', image: 'https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full/catalog-image/MTA-63524082/no_brand_hijab_sport_jilbab_instan_kekinian_olahraga_santai_-_kerudung_instant_full01_buwy0pu4.jpg', badge: null },
+      { id: 6, name: 'Hijab Pashmina Diamond Italia', price: 75000, category: 'pashmina', image: 'https://www.arktiv.co.id/cdn/shop/files/EVO07429_800x.jpg?v=1700034933', badge: 'Premium' },
+      { id: 7, name: 'Hijab Inner / Ciput Canstock Tali', price: 15000, category: 'instan', image: 'https://img.lazcdn.com/g/p/72186205dd179366af3ca709d6d07047.png_720x720q80.png', badge: null },
+      { id: 8, name: 'Hijab Segi Empat Bella Square', price: 40000, category: 'segiempat', image: 'https://down-id.img.susercontent.com/file/id-11134201-7rbk3-m69l9ls19o1y54', badge: 'Terlaris' },
+      { id: 9, name: 'Hijab Pashmina Sifon Premium', price: 85000, category: 'pashmina', image: 'https://gonegani.id/cdn/shop/files/minral_93f5639e-e35b-409f-a0f1-e79bdb48da8f.jpg?v=1752891496&width=2048', badge: 'Limited' },
+      { id: 10, name: 'Hijab Syar\'i Khimar Nibras', price: 95000, category: 'syari', image: 'https://gonegani.id/cdn/shop/files/DustyBlue_e6debab4-0ae0-436e-be13-fcbdb989f1ad.jpg?v=1754979161&width=2048', badge: 'Eksklusif' }
+    ];
+
+    // Testimonial Data
+    const testimonials = [
+      { name: 'Siti Rahayu', location: 'Jakarta', text: 'Bahannya adem banget, nggak gerah sama sekali. Warna nya juga sesuai sama foto!', rating: 5, avatar: 'SR' },
+      { name: 'Dewi Kartika', location: 'Bandung', text: 'Pengiriman cepet, packingnya rapi. Hijabnya lembut dan nyaman dipakai seharian.', rating: 5, avatar: 'DK' },
+      { name: 'Anisa Putri', location: 'Surabaya', text: 'Sudah repeat order berkali-kali. Kualitas selalu konsisten dan harga sangat terjangkau!', rating: 5, avatar: 'AP' },
+      { name: 'Rina Wulandari', location: 'Yogyakarta', text: 'Modelnya kekinian banget, bahannya ga gampang kusut. Recommended pokoknya!', rating: 5, avatar: 'RW' },
+      { name: 'Maya Sari', location: 'Semarang', text: 'Customer service nya ramah dan fast response. Hijabnya cantik-cantik semua!', rating: 5, avatar: 'MS' },
+      { name: 'Fatimah Zahra', location: 'Makassar', text: 'Kualitas premium dengan harga affordable. Pokoknya wajib beli di sini!', rating: 5, avatar: 'FZ' }
+    ];
+
+    // Cart State
+    let cart = [];
+
+    // DOM Elements
+    const productGrid = document.getElementById('productGrid');
+    const testimonialGrid = document.getElementById('testimonialGrid');
+    const cartBtn = document.getElementById('cartBtn');
+    const cartPanel = document.getElementById('cartPanel');
+    const cartOverlay = document.getElementById('cartOverlay');
+    const closeCartBtn = document.getElementById('closeCart');
+    const cartItems = document.getElementById('cartItems');
+    const cartCount = document.getElementById('cartCount');
+    const cartTotal = document.getElementById('cartTotal');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    const continueShoppingBtn = document.getElementById('continueShoppingBtn');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+
+    // Format currency
+    function formatPrice(price) {
+      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price);
+    }
+
+    // Calculate discounted price (50% Ramadhan sale)
+    function getDiscountedPrice(price) {
+      return Math.floor(price * 0.5);
+    }
+
+    // Render Products
+    function renderProducts(category = 'all') {
+      const filtered = category === 'all' ? products : products.filter(p => p.category === category);
+      
+      productGrid.innerHTML = filtered.map((product, index) => `
+        <article class="product-card bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl border border-surface-200 group" style="animation-delay: ${index * 0.05}s">
+          <div class="relative aspect-square overflow-hidden bg-surface-100">
+            <img 
+              src="${product.image}" 
+              alt="${product.name}"
+              class="product-image w-full h-full object-cover"
+              loading="lazy"
+            >
+            ${product.badge ? `
+              <span class="absolute top-3 left-3 px-3 py-1 bg-brand-500 text-white text-xs font-semibold rounded-full">
+                ${product.badge}
+              </span>
+            ` : ''}
+            <span class="absolute top-3 right-3 px-2 py-1 bg-red-500 text-white text-xs font-bold rounded-full">
+              -50%
+            </span>
+          </div>
+          <div class="p-4">
+            <h3 class="font-semibold text-gray-900 text-sm sm:text-base mb-2 line-clamp-2">${product.name}</h3>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-lg sm:text-xl font-bold text-brand-600">${formatPrice(getDiscountedPrice(product.price))}</span>
+              <span class="text-sm text-gray-400 line-through">${formatPrice(product.price)}</span>
+            </div>
+            <button 
+              class="btn-cart w-full flex items-center justify-center gap-2 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-sm"
+              onclick="addToCart(${product.id})"
+              aria-label="Tambah ${product.name} ke keranjang"
+            >
+              <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+              <span>Beli Sekarang</span>
+            </button>
+          </div>
+        </article>
+      `).join('');
+      
+      lucide.createIcons();
+    }
+
+    // Render Testimonials
+    function renderTestimonials() {
+      testimonialGrid.innerHTML = testimonials.map((t, index) => `
+        <article class="bg-surface-50 rounded-2xl p-6 border border-surface-200 hover:shadow-lg transition-shadow" style="animation-delay: ${index * 0.1}s">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold">
+              ${t.avatar}
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900">${t.name}</h4>
+              <p class="text-sm text-gray-500">${t.location}</p>
+            </div>
+          </div>
+          <div class="flex gap-1 mb-3">
+            ${Array(t.rating).fill().map(() => `<i data-lucide="star" class="w-4 h-4 text-brand-500 fill-brand-500"></i>`).join('')}
+          </div>
+          <p class="text-gray-600 text-sm leading-relaxed">"${t.text}"</p>
+        </article>
+      `).join('');
+      
+      lucide.createIcons();
+    }
+
+    // Add to Cart
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      
+      const existingItem = cart.find(item => item.id === productId);
+      const discountedPrice = getDiscountedPrice(product.price);
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({ ...product, quantity: 1, finalPrice: discountedPrice });
+      }
+      
+      updateCart();
+      openCart();
+    }
+
+    // Remove from Cart
+    function removeFromCart(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      updateCart();
+    }
+
+    // Update Quantity
+    function updateQuantity(productId, delta) {
+      const item = cart.find(item => item.id === productId);
+      if (!item) return;
+      
+      item.quantity += delta;
+      if (item.quantity <= 0) {
+        removeFromCart(productId);
+      } else {
+        updateCart();
+      }
+    }
+
+    // Update Cart UI
+    function updateCart() {
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const totalPrice = cart.reduce((sum, item) => sum + (item.finalPrice * item.quantity), 0);
+      
+      cartCount.textContent = totalItems;
+      cartCount.classList.toggle('hidden', totalItems === 0);
+      cartTotal.textContent = formatPrice(totalPrice);
+      
+      if (cart.length === 0) {
+        cartItems.innerHTML = `
+          <div class="flex flex-col items-center justify-center h-full text-center">
+            <div class="w-20 h-20 rounded-full bg-surface-100 flex items-center justify-center mb-4">
+              <i data-lucide="shopping-bag" class="w-10 h-10 text-gray-300"></i>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">Keranjang Kosong</h4>
+            <p class="text-sm text-gray-500 mb-6">Belum ada produk di keranjang</p>
+            <button onclick="closeCart()" class="inline-flex items-center gap-2 px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl transition-colors">
+              <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+              <span>Mulai Belanja</span>
+            </button>
+          </div>
+        `;
+      } else {
+        cartItems.innerHTML = cart.map(item => `
+          <div class="flex gap-4 mb-4 pb-4 border-b border-surface-200 last:border-0 last:mb-0 last:pb-0">
+            <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded-xl">
+            <div class="flex-1">
+              <h4 class="font-semibold text-gray-900 text-sm mb-1 line-clamp-2">${item.name}</h4>
+              <p class="text-brand-600 font-bold">${formatPrice(item.finalPrice)}</p>
+              <div class="flex items-center gap-3 mt-2">
+                <button onclick="updateQuantity(${item.id}, -1)" class="w-8 h-8 rounded-lg bg-surface-100 hover:bg-surface-200 flex items-center justify-center transition-colors" aria-label="Kurangi jumlah">
+                  <i data-lucide="minus" class="w-4 h-4 text-gray-600"></i>
+                </button>
+                <span class="font-semibold text-gray-900">${item.quantity}</span>
+                <button onclick="updateQuantity(${item.id}, 1)" class="w-8 h-8 rounded-lg bg-surface-100 hover:bg-surface-200 flex items-center justify-center transition-colors" aria-label="Tambah jumlah">
+                  <i data-lucide="plus" class="w-4 h-4 text-gray-600"></i>
+                </button>
+                <button onclick="removeFromCart(${item.id})" class="ml-auto w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center transition-colors" aria-label="Hapus dari keranjang">
+                  <i data-lucide="trash-2" class="w-4 h-4 text-red-500"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+      
+      lucide.createIcons();
+    }
+
+    // Open Cart
+    function openCart() {
+      cartPanel.classList.remove('translate-x-full');
+      cartOverlay.classList.remove('opacity-0', 'pointer-events-none');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Close Cart
+    function closeCart() {
+      cartPanel.classList.add('translate-x-full');
+      cartOverlay.classList.add('opacity-0', 'pointer-events-none');
+      document.body.style.overflow = '';
+    }
+
+    // Checkout via WhatsApp
+    function checkout() {
+      if (cart.length === 0) return;
+      
+      const totalPrice = cart.reduce((sum, item) => sum + (item.finalPrice * item.quantity), 0);
+      let message = `Halo kak, saya mau order:\n\n`;
+      
+      cart.forEach(item => {
+        message += `• ${item.name} x${item.quantity} - ${formatPrice(item.finalPrice * item.quantity)}\n`;
+      });
+      
+      message += `\n*Total: ${formatPrice(totalPrice)}*\n\nMohon dikonfirmasi ya kak. Terima kasih!`;
+      
+      const encodedMessage = encodeURIComponent(message);
+      window.open(`https://wa.me/6281234567890?text=${encodedMessage}`, '_blank');
+    }
+
+    // Category Filter
+    function filterCategory(category) {
+      tabBtns.forEach(btn => {
+        const isActive = btn.dataset.category === category;
+        btn.classList.toggle('active', isActive);
+        btn.classList.toggle('bg-brand-50', isActive);
+        btn.classList.toggle('text-brand-600', isActive);
+        btn.classList.toggle('border-brand-500', isActive);
+        btn.classList.toggle('bg-surface-100', !isActive);
+        btn.classList.toggle('text-gray-600', !isActive);
+        btn.setAttribute('aria-selected', isActive);
+      });
+      
+      renderProducts(category);
+    }
+
+    // Event Listeners
+    cartBtn.addEventListener('click', openCart);
+    closeCartBtn.addEventListener('click', closeCart);
+    cartOverlay.addEventListener('click', closeCart);
+    checkoutBtn.addEventListener('click', checkout);
+    continueShoppingBtn.addEventListener('click', closeCart);
+    
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => filterCategory(btn.dataset.category));
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeCart();
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProducts();
+      renderTestimonials();
+      updateCart();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
