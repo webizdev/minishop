@@ -310,8 +310,8 @@
             <div
               class="absolute inset-0 bg-gradient-to-br from-brand-300 to-brand-500 rounded-full opacity-20 blur-3xl animate-float">
             </div>
-            <img src="https://deenay.id/cdn/shop/files/DSCF3070_800x.jpg?v=1708741386" alt="Koleksi Hijab Premium"
-              class="relative w-full h-full object-cover rounded-3xl shadow-2xl">
+            <img id="heroImage" src="https://deenay.id/cdn/shop/files/DSCF3070_800x.jpg?v=1708741386"
+              alt="Koleksi Hijab Premium" class="relative w-full h-full object-cover rounded-3xl shadow-2xl">
             <div class="absolute -bottom-4 -right-4 bg-white rounded-2xl shadow-xl p-4 flex items-center gap-3">
               <div class="w-12 h-12 rounded-xl bg-brand-100 flex items-center justify-center">
                 <i data-lucide="truck" class="w-6 h-6 text-brand-600"></i>
@@ -681,6 +681,11 @@
 
       const footerBrand = document.querySelector('footer .text-xl.font-bold');
       if (footerBrand) footerBrand.innerHTML = shop.shop_name;
+
+      if (shop.hero_image) {
+        const heroImg = document.getElementById('heroImage');
+        if (heroImg) heroImg.src = shop.hero_image;
+      }
 
       // Update Hero
       const heroTitleEl = document.querySelector('h1.text-4xl');

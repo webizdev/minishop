@@ -136,6 +136,31 @@
                                 class="w-full px-4 py-2 bg-surface-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 sm:text-sm"></textarea>
                         </div>
 
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Gambar Hero (Banner
+                                Utama)</label>
+                            <div class="space-y-2">
+                                <select id="heroImageSourceType" onchange="toggleHeroImageInput()"
+                                    class="w-full px-3 py-2 border border-gray-200 bg-surface-50 rounded-lg focus:ring-2 focus:ring-brand-500 sm:text-sm">
+                                    <option value="url">Link Image URL</option>
+                                    <option value="upload">Upload File</option>
+                                </select>
+                                <input type="url" id="shopHeroImage" placeholder="https://..."
+                                    class="w-full px-4 py-2 bg-surface-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 sm:text-sm">
+                                <input type="file" id="shopHeroImageFile" accept="image/*"
+                                    class="hidden w-full px-4 py-2 bg-surface-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 sm:text-sm">
+                                <p id="heroUploadStatus" class="hidden text-xs text-brand-600 animate-pulse">Uploading
+                                    preview...</p>
+                            </div>
+                            <script>
+                                function toggleHeroImageInput() {
+                                    const type = document.getElementById('heroImageSourceType').value;
+                                    document.getElementById('shopHeroImage').classList.toggle('hidden', type === 'upload');
+                                    document.getElementById('shopHeroImageFile').classList.toggle('hidden', type === 'url');
+                                }
+                            </script>
+                        </div>
+
                         <div class="pt-4 border-t border-surface-200">
                             <label
                                 class="block text-sm font-medium text-gray-700 mb-2 flex items-center justify-between">
@@ -222,13 +247,40 @@
                     </div>
 
                     <div class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Cara Order</label>
-                                <textarea id="shopHowToOrder" rows="4"
-                                    class="w-full px-4 py-2 bg-surface-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 sm:text-sm"
-                                    placeholder="Langkah-langkah pemesanan..."></textarea>
+                        <h3 class="font-bold text-gray-900 border-b border-surface-200 pb-2 mb-4">Urutan Cara Order (4
+                            Tahap)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                            <div class="bg-surface-50 p-4 rounded-xl border border-surface-200">
+                                <label class="block text-xs font-semibold text-brand-600 mb-1">Tahap 1</label>
+                                <input type="text" id="orderStep1Title" value="Pilih Produk"
+                                    class="w-full px-3 py-2 mb-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 font-semibold shadow-sm">
+                                <textarea id="orderStep1Desc" rows="2"
+                                    class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 shadow-sm">Cari dan pilih produk favoritmu dari katalog kami.</textarea>
                             </div>
+                            <div class="bg-surface-50 p-4 rounded-xl border border-surface-200">
+                                <label class="block text-xs font-semibold text-brand-600 mb-1">Tahap 2</label>
+                                <input type="text" id="orderStep2Title" value="Masukan Keranjang"
+                                    class="w-full px-3 py-2 mb-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 font-semibold shadow-sm">
+                                <textarea id="orderStep2Desc" rows="2"
+                                    class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 shadow-sm">Klik tombol "Tambah Keranjang" pada produk yang diinginkan.</textarea>
+                            </div>
+                            <div class="bg-surface-50 p-4 rounded-xl border border-surface-200">
+                                <label class="block text-xs font-semibold text-brand-600 mb-1">Tahap 3</label>
+                                <input type="text" id="orderStep3Title" value="Checkout WhatsApp"
+                                    class="w-full px-3 py-2 mb-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 font-semibold shadow-sm">
+                                <textarea id="orderStep3Desc" rows="2"
+                                    class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 shadow-sm">Klik ikon keranjang lalu pilih "Checkout via WhatsApp".</textarea>
+                            </div>
+                            <div class="bg-surface-50 p-4 rounded-xl border border-surface-200">
+                                <label class="block text-xs font-semibold text-brand-600 mb-1">Tahap 4</label>
+                                <input type="text" id="orderStep4Title" value="Konfirmasi & Bayar"
+                                    class="w-full px-3 py-2 mb-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 font-semibold shadow-sm">
+                                <textarea id="orderStep4Desc" rows="2"
+                                    class="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-brand-500 shadow-sm">Admin akan mengonfirmasi pesanan dan detail pembayaran.</textarea>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-6">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Kebijakan Pengiriman</label>
                                 <textarea id="shopShipping" rows="4"
@@ -483,16 +535,29 @@
                     currentShop = data;
                     document.getElementById('shopId').value = data.id;
                     document.getElementById('shopUsername').value = data.username;
-                    document.getElementById('shopName').value = data.shop_name;
+                    document.getElementById('shopName').value = data.shop_name || '';
                     document.getElementById('shopWa').value = data.whatsapp_number || '';
                     document.getElementById('shopMaps').value = data.maps_embed || '';
                     document.getElementById('shopHeroTitle').value = data.hero_title || '';
                     document.getElementById('shopHeroDesc').value = data.hero_desc || '';
+                    document.getElementById('shopHeroImage').value = data.hero_image || '';
 
                     const categories = data.categories || ["Pashmina", "Segi Empat", "Instan", "Aksesoris"];
                     renderCategories(categories);
 
-                    const defaultHowToOrder = "1. Pilih Produk\nCari dan pilih produk favoritmu dari katalog kami.\n2. Masukan Keranjang\nKlik tombol \"Tambah Keranjang\" pada produk yang diinginkan.\n3. Checkout WhatsApp\nKlik ikon keranjang lalu pilih \"Checkout via WhatsApp\".\n4. Konfirmasi & Bayar\nAdmin akan mengonfirmasi pesanan dan detail pembayaran.";
+                    const defaultHowToOrder = "1. Pilih Produk\nCari dan pilih produk favoritmu dari katalog kami.\n\n2. Masukan Keranjang\nKlik tombol \"Tambah Keranjang\" pada produk yang diinginkan.\n\n3. Checkout WhatsApp\nKlik ikon keranjang lalu pilih \"Checkout via WhatsApp\".\n\n4. Konfirmasi & Bayar\nAdmin akan mengonfirmasi pesanan dan detail pembayaran.";
+                    const howToOrderStr = data.how_to_order || defaultHowToOrder;
+                    const steps = howToOrderStr.split(/\n\n/);
+                    for (let i = 0; i < 4; i++) {
+                        const stepContent = steps[i] || '';
+                        const lines = stepContent.split('\n');
+                        let title = lines[0] || '';
+                        title = title.replace(/^\d+\.\s*/, ''); // Remove numbering
+                        let desc = lines.slice(1).join('\n') || '';
+
+                        document.getElementById(`orderStep${i + 1}Title`).value = title;
+                        document.getElementById(`orderStep${i + 1}Desc`).value = desc;
+                    }
 
                     const defaultShipping = "• Pengiriman dilakukan setiap hari Senin - Sabtu.\n• Pesanan sebelum jam 15.00 WIB dikirim di hari yang sama.\n• Kami menggunakan jasa kurir JNE, J&T, dan Sicepat.\n• Nomor resi akan diinfokan via WhatsApp segera setelah dikirim.";
 
@@ -505,7 +570,6 @@
                         { q: "Apakah bisa COD?", a: "Saat ini kami hanya melayani pembayaran via transfer bank yang divalidasi langsung oleh admin toko kami." }
                     ];
 
-                    document.getElementById('shopHowToOrder').value = data.how_to_order || defaultHowToOrder;
                     document.getElementById('shopShipping').value = data.shipping_info || defaultShipping;
                     document.getElementById('shopReturn').value = data.return_policy || defaultReturn;
 
@@ -531,18 +595,53 @@
 
         document.getElementById('shopForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const shopData = {
-                user_id: currentUser.id,
-                username: document.getElementById('shopUsername').value.toLowerCase().replace(/[^a-z0-9_-]/g, ''),
-                shop_name: document.getElementById('shopName').value,
-                whatsapp_number: document.getElementById('shopWa').value,
-                maps_embed: document.getElementById('shopMaps').value,
-                hero_title: document.getElementById('shopHeroTitle').value,
-                hero_desc: document.getElementById('shopHeroDesc').value,
-                categories: JSON.parse(document.getElementById('shopCategories').value)
-            };
+            const btn = document.getElementById('saveShopBtn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
 
             try {
+                let heroImageUrl = document.getElementById('shopHeroImage').value;
+                const heroImageType = document.getElementById('heroImageSourceType').value;
+
+                if (heroImageType === 'upload') {
+                    const fileInput = document.getElementById('shopHeroImageFile');
+                    const file = fileInput.files[0];
+                    if (file) {
+                        document.getElementById('heroUploadStatus').classList.remove('hidden');
+                        const fileExt = file.name.split('.').pop();
+                        const fileName = `${currentUser.id}/hero_${Date.now()}.${fileExt}`;
+
+                        const { data: uploadData, error: uploadError } = await supabaseClient.storage
+                            .from('minishop_images')
+                            .upload(fileName, file);
+
+                        if (uploadError) throw uploadError;
+
+                        const { data: { publicUrl } } = supabaseClient.storage
+                            .from('minishop_images')
+                            .getPublicUrl(fileName);
+
+                        heroImageUrl = publicUrl;
+                        document.getElementById('heroUploadStatus').classList.add('hidden');
+                    } else if (currentShop) {
+                        // User didn't select new file, keep existing image
+                        heroImageUrl = currentShop.hero_image;
+                    }
+                }
+
+                const shopData = {
+                    user_id: currentUser.id,
+                    username: document.getElementById('shopUsername').value.toLowerCase().replace(/[^a-z0-9_-]/g, ''),
+                    shop_name: document.getElementById('shopName').value,
+                    whatsapp_number: document.getElementById('shopWa').value,
+                    maps_embed: document.getElementById('shopMaps').value,
+                    hero_title: document.getElementById('shopHeroTitle').value,
+                    hero_desc: document.getElementById('shopHeroDesc').value,
+                    categories: JSON.parse(document.getElementById('shopCategories').value),
+                    hero_image: heroImageUrl
+                };
+
                 let result;
                 if (currentShop) {
                     result = await supabaseClient.from('minishop_shops').update(shopData).eq('id', currentShop.id).select();
@@ -564,6 +663,8 @@
                 renderCategories(currentShop.categories);
             } catch (err) {
                 showDashboardAlert(err.message || 'Error saving shop profile. Username might be taken.', 'error');
+                btn.disabled = false;
+                btn.textContent = originalText;
             }
         });
 
@@ -617,7 +718,15 @@
                 return;
             }
             try {
-                const howTo = document.getElementById('shopHowToOrder').value;
+                // Reconstruct the 4 steps into the standard format
+                const orderSteps = [
+                    "1. " + document.getElementById('orderStep1Title').value + "\n" + document.getElementById('orderStep1Desc').value,
+                    "2. " + document.getElementById('orderStep2Title').value + "\n" + document.getElementById('orderStep2Desc').value,
+                    "3. " + document.getElementById('orderStep3Title').value + "\n" + document.getElementById('orderStep3Desc').value,
+                    "4. " + document.getElementById('orderStep4Title').value + "\n" + document.getElementById('orderStep4Desc').value
+                ];
+                const howTo = orderSteps.join('\n\n');
+
                 const shipping = document.getElementById('shopShipping').value;
                 const returnPolicy = document.getElementById('shopReturn').value;
 
