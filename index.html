@@ -217,15 +217,20 @@
   <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-surface-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16 sm:h-20">
-        <a href="#" class="flex items-center gap-2">
+        <a href="index.html" class="flex items-center gap-2">
           <div
             class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center">
             <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
           </div>
-          <span class="text-xl font-bold text-gray-900">Hijab Cantik</span>
+          <span class="text-xl font-bold text-gray-900">Minishop</span>
         </a>
 
         <div class="flex items-center gap-3">
+          <a href="auth.html"
+            class="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-600 hover:text-brand-600 transition-colors">
+            <i data-lucide="store" class="w-4 h-4"></i>
+            <span>Buka Toko</span>
+          </a>
           <button id="cartBtn" class="relative p-2.5 rounded-xl bg-surface-100 hover:bg-surface-200 transition-colors"
             aria-label="Keranjang belanja">
             <i data-lucide="shopping-bag" class="w-5 h-5 text-gray-700"></i>
@@ -294,32 +299,8 @@
   <!-- Category Tabs -->
   <section class="sticky top-16 sm:top-20 z-40 bg-white border-b border-surface-200 py-4">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-2" role="tablist">
-        <button
-          class="tab-btn active flex-shrink-0 px-5 py-2.5 rounded-xl font-medium text-sm border-2 border-brand-500 bg-brand-50 text-brand-600 transition-all"
-          data-category="all" role="tab" aria-selected="true">
-          Semua
-        </button>
-        <button
-          class="tab-btn flex-shrink-0 px-5 py-2.5 rounded-xl font-medium text-sm border-2 border-transparent bg-surface-100 text-gray-600 hover:bg-surface-200 transition-all"
-          data-category="pashmina" role="tab" aria-selected="false">
-          Pashmina
-        </button>
-        <button
-          class="tab-btn flex-shrink-0 px-5 py-2.5 rounded-xl font-medium text-sm border-2 border-transparent bg-surface-100 text-gray-600 hover:bg-surface-200 transition-all"
-          data-category="segiempat" role="tab" aria-selected="false">
-          Segi Empat
-        </button>
-        <button
-          class="tab-btn flex-shrink-0 px-5 py-2.5 rounded-xl font-medium text-sm border-2 border-transparent bg-surface-100 text-gray-600 hover:bg-surface-200 transition-all"
-          data-category="instan" role="tab" aria-selected="false">
-          Instan / Inner
-        </button>
-        <button
-          class="tab-btn flex-shrink-0 px-5 py-2.5 rounded-xl font-medium text-sm border-2 border-transparent bg-surface-100 text-gray-600 hover:bg-surface-200 transition-all"
-          data-category="syari" role="tab" aria-selected="false">
-          Syar'i
-        </button>
+      <div id="categoryTabs" class="flex gap-2 overflow-x-auto scrollbar-hide pb-2" role="tablist">
+        <!-- Categories will be injected here -->
       </div>
     </div>
   </section>
@@ -391,7 +372,7 @@
 
         <div>
           <h4 class="font-semibold mb-4">Hubungi Kami</h4>
-          <a href="https://wa.me/6281234567890" target="_blank"
+          <a id="footerWa" href="#" target="_blank"
             class="inline-flex items-center gap-2 px-5 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-xl transition-colors">
             <i data-lucide="message-circle" class="w-5 h-5"></i>
             <span>WhatsApp</span>
@@ -444,9 +425,8 @@
   </aside>
 
   <!-- Floating WhatsApp Button -->
-  <a href="https://wa.me/6281234567890?text=Halo%20kak%2C%20saya%20mau%20tanya%20tentang%20produk%20hijab"
-    target="_blank"
-    class="fixed bottom-6 right-6 z-40 w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110"
+  <a id="floatingWa" href="#" target="_blank"
+    class="fixed bottom-6 right-6 z-40 w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 hidden"
     aria-label="Hubungi via WhatsApp">
     <i data-lucide="message-circle" class="w-6 h-6"></i>
   </a>
@@ -455,7 +435,7 @@
   <script>
     const SUPABASE_URL = 'https://uavwpmvpxgckrnubnqex.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhdndwbXZweGdja3JudWJucWV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxMjgyNzQsImV4cCI6MjA4MzcwNDI3NH0.M9yc7xf6v0_PqLomBI48v8UF5SncxK78Z9ZhUqsgVBU';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     // Initial Data Placeholders
     let products = [];
@@ -501,9 +481,11 @@
                     </div>
                     <h1 class="text-3xl font-bold text-gray-900 mb-4">Welcome to Minishop</h1>
                     <p class="text-gray-600 max-w-md mb-8">Please provide a valid shop URL (e.g., ?shop=username) to view a store.</p>
-                    <a href="auth.html" class="px-8 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-lg transition-colors">
-                        Create Your Own Store
-                    </a>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                      <a href="auth.html" class="px-8 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl text-lg transition-colors">
+                          Join as Seller
+                      </a>
+                    </div>
                 </div>
             `;
         lucide.createIcons();
@@ -511,14 +493,31 @@
       }
 
       // Fetch Shop Data
-      const { data: shop, error: shopErr } = await supabase
+      const { data: shop, error: shopErr } = await supabaseClient
         .from('minishop_shops')
         .select('*')
         .eq('username', username)
         .single();
 
       if (shopErr || !shop) {
-        document.body.innerHTML = `<div class="p-8 text-center text-red-500 font-bold text-xl">Store "${username}" not found.</div>`;
+        document.body.innerHTML = `
+                <div class="min-h-screen flex flex-col items-center justify-center bg-surface-50 p-6 text-center">
+                    <div class="w-20 h-20 rounded-2xl bg-red-50 flex items-center justify-center mb-6">
+                        <i data-lucide="alert-circle" class="w-10 h-10 text-red-500"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-gray-900 mb-2">Store Not Found</h1>
+                    <p class="text-gray-600 mb-8">Store "${username}" does not exist in our system.</p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                      <a href="index.html" class="px-8 py-3 bg-white border border-gray-200 hover:bg-surface-50 text-gray-700 font-semibold rounded-xl transition-colors">
+                          Back to Home
+                      </a>
+                      <a href="auth.html" class="px-8 py-3 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-xl transition-colors">
+                          Create Your Own Store
+                      </a>
+                    </div>
+                </div>
+            `;
+        lucide.createIcons();
         return;
       }
 
@@ -541,8 +540,38 @@
       const heroDescEl = document.querySelector('p.text-lg.sm\\:text-xl');
       if (heroDescEl && shop.hero_desc) heroDescEl.innerHTML = shop.hero_desc;
 
+      // Update WhatsApp links
+      if (shop.whatsapp_number) {
+        let cleanWA = shop.whatsapp_number.replace(/\D/g, '');
+        if (cleanWA.startsWith('0')) cleanWA = '62' + cleanWA.substring(1);
+        const waUrl = `https://wa.me/${cleanWA}`;
+
+        const footerWa = document.getElementById('footerWa');
+        if (footerWa) footerWa.href = waUrl;
+
+        const floatingWa = document.getElementById('floatingWa');
+        if (floatingWa) {
+          floatingWa.href = `${waUrl}?text=${encodeURIComponent('Halo ' + shop.shop_name + ', saya mau tanya tentang produknya.')}`;
+          floatingWa.classList.remove('hidden');
+        }
+      }
+
+      // Update Categories UI
+      const categories = shop.categories || ["Pashmina", "Segi Empat", "Instan", "Aksesoris"];
+      const categoryTabs = document.getElementById('categoryTabs');
+      if (categoryTabs) {
+        categoryTabs.innerHTML = `
+            <button class="tab-btn active flex-shrink-0 px-5 py-2.5 rounded-xl font-medium text-sm border-2 border-brand-500 bg-brand-50 text-brand-600 transition-all"
+                onclick="filterCategory('all')" data-category="all" role="tab" aria-selected="true">Semua</button>
+            ${categories.map(c => `
+                <button class="tab-btn flex-shrink-0 px-5 py-2.5 rounded-xl font-medium text-sm border-2 border-transparent bg-surface-100 text-gray-600 hover:bg-surface-200 transition-all"
+                    onclick="filterCategory('${c}')" data-category="${c}" role="tab" aria-selected="false">${c}</button>
+            `).join('')}
+          `;
+      }
+
       // Fetch Products
-      const { data: prods } = await supabase
+      const { data: prods } = await supabaseClient
         .from('minishop_products')
         .select('*')
         .eq('shop_id', shop.id)
@@ -550,6 +579,16 @@
 
       products = prods || [];
       renderProducts();
+
+      // Fetch Testimonials
+      const { data: testis } = await supabaseClient
+        .from('minishop_testimonials')
+        .select('*')
+        .eq('shop_id', shop.id)
+        .order('created_at', { ascending: false });
+
+      testimonials = testis || [];
+      renderTestimonials();
 
       // Check if there are maps
       if (shop.maps_embed) {
@@ -581,13 +620,14 @@
     // Render Products
     function renderProducts(category = 'all') {
       const filtered = category === 'all' ? products : products.filter(p => p.category === category);
+      const grid = document.getElementById('productGrid');
 
       if (filtered.length === 0) {
-        productGrid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500">Belum ada produk untuk kategori ini.</div>`;
+        grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500">Belum ada produk untuk kategori ini.</div>`;
         return;
       }
 
-      productGrid.innerHTML = filtered.map((product, index) => `
+      grid.innerHTML = filtered.map((product, index) => `
         <article class="product-card bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl border border-surface-200 group" style="animation-delay: ${index * 0.05}s">
           <div class="relative aspect-square overflow-hidden bg-surface-100">
             <img 
@@ -620,6 +660,34 @@
         </article>
       `).join('');
 
+      lucide.createIcons();
+    }
+
+    // Render Testimonials
+    function renderTestimonials() {
+      const grid = document.getElementById('testimonialGrid');
+      if (testimonials.length === 0) {
+        grid.innerHTML = `<div class="col-span-full py-12 text-center text-gray-400 italic">Belum ada testimoni.</div>`;
+        return;
+      }
+
+      grid.innerHTML = testimonials.map(t => `
+        <div class="p-6 bg-surface-50 rounded-2xl border border-surface-200">
+          <div class="flex gap-1 text-brand-500 mb-4">
+            ${Array(t.rating).fill('<i data-lucide="star" class="w-4 h-4 fill-current"></i>').join('')}
+          </div>
+          <p class="text-gray-700 mb-6 italic">"${t.text}"</p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold">
+              ${t.avatar ? `<img src="${t.avatar}" class="w-full h-full rounded-full object-cover">` : t.name.charAt(0)}
+            </div>
+            <div>
+              <p class="font-bold text-gray-900 text-sm">${t.name}</p>
+              <p class="text-xs text-gray-500">${t.location || ''}</p>
+            </div>
+          </div>
+        </div>
+      `).join('');
       lucide.createIcons();
     }
 
@@ -758,8 +826,9 @@
 
     // Category Filter
     function filterCategory(category) {
-      if (tabBtns) {
-        tabBtns.forEach(btn => {
+      const btns = document.querySelectorAll('.tab-btn');
+      if (btns) {
+        btns.forEach(btn => {
           const isActive = btn.dataset.category === category;
           btn.classList.toggle('active', isActive);
           btn.classList.toggle('bg-brand-50', isActive);
@@ -767,6 +836,7 @@
           btn.classList.toggle('border-brand-500', isActive);
           btn.classList.toggle('bg-surface-100', !isActive);
           btn.classList.toggle('text-gray-600', !isActive);
+          btn.classList.toggle('border-transparent', !isActive);
           btn.setAttribute('aria-selected', isActive);
         });
       }
