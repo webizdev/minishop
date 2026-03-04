@@ -11,11 +11,30 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
+  <script type="text/javascript">
+    // Single Page Apps for GitHub Pages
+    // MIT License
+    // https://github.com/rafgraph/spa-github-pages
+    (function (l) {
+      if (l.search[1] === '/') {
+        var decoded = l.search.slice(1).split('&').map(function (s) {
+          return s.replace(/~and~/g, '&')
+        }).join('?');
+        window.history.replaceState(null, null,
+          l.pathname.slice(0, -1) + decoded + l.hash
+        );
+      }
+    }(window.location))
+  </script>
   <script>
-    // Dynamic Base for Clean URLs (supports subpaths like /username)
+    // Dynamic Base for Clean URLs on GitHub Pages (repo: /minishop/)
     if (window.location.host) {
-      const currentPath = window.location.pathname;
-      const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+      // Find the repo path (if exists)
+      const pathParts = window.location.pathname.split('/').filter(p => p);
+      let basePath = '/';
+      if (pathParts[0] === 'minishop') {
+        basePath = '/minishop/';
+      }
       document.write('<base href="' + window.location.origin + basePath + '">');
     }
   </script>
@@ -610,8 +629,10 @@
       const queryShop = urlParams.get('shop');
       if (queryShop) return queryShop;
 
-      // Clean URL support: domain.com/username
-      const pathParts = window.location.pathname.split('/').filter(p => p && p !== 'index.html');
+      // Clean URL support: domain.com/minishop/username
+      const ignore = ['minishop', 'index.html', 'dashboard.html', 'auth.html', '404.html'];
+      const pathParts = window.location.pathname.split('/').filter(p => p && !ignore.includes(p.toLowerCase()));
+
       return pathParts.length > 0 ? pathParts[pathParts.length - 1] : null;
     }
 

@@ -10,6 +10,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
+    <script>
+        // Dynamic Base for Subdirectory support (GitHub Pages /minishop/)
+        if (window.location.host) {
+            const pathParts = window.location.pathname.split('/').filter(p => p);
+            let basePath = '/';
+            if (pathParts[0] === 'minishop') {
+                basePath = '/minishop/';
+            }
+            document.write('<base href="' + window.location.origin + basePath + '">');
+        }
+    </script>
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
