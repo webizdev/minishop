@@ -323,7 +323,7 @@
             <div
               class="absolute inset-0 bg-gradient-to-br from-brand-300 to-brand-500 rounded-full opacity-20 blur-3xl animate-float">
             </div>
-            <img id="heroImage" src="https://deenay.id/cdn/shop/files/DSCF3070_800x.jpg?v=1708741386"
+            <img id="heroImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
               alt="Koleksi Hijab Premium" class="relative w-full h-full object-cover rounded-3xl shadow-2xl">
             <div class="absolute -bottom-4 -right-4 bg-white rounded-2xl shadow-xl p-4 flex items-center gap-3">
               <div class="w-12 h-12 rounded-xl bg-brand-100 flex items-center justify-center">
@@ -331,7 +331,7 @@
               </div>
               <div>
                 <p class="text-sm font-semibold text-gray-900">Gratis Ongkir</p>
-                <p class="text-xs text-gray-500">Min. belanja Rp100rb</p>
+                <p class="text-xs text-gray-500">Min. belanja Rp500rb</p>
               </div>
             </div>
           </div>
@@ -447,11 +447,8 @@
 
         <div>
           <h4 class="font-semibold mb-4">Produk</h4>
-          <ul class="space-y-2 text-sm text-gray-400">
-            <li><a href="#" class="hover:text-brand-400 transition-colors">Pashmina</a></li>
-            <li><a href="#" class="hover:text-brand-400 transition-colors">Segi Empat</a></li>
-            <li><a href="#" class="hover:text-brand-400 transition-colors">Instan</a></li>
-            <li><a href="#" class="hover:text-brand-400 transition-colors">Syar'i</a></li>
+          <ul id="footerCategoryList" class="space-y-2 text-sm text-gray-400">
+            <!-- Categories will be injected here -->
           </ul>
         </div>
 
@@ -745,6 +742,14 @@
                     onclick="filterCategory('${c}')" data-category="${c}" role="tab" aria-selected="false">${c}</button>
             `).join('')}
           `;
+      }
+
+      // Update Footer Categories
+      const footerCatList = document.getElementById('footerCategoryList');
+      if (footerCatList) {
+        footerCatList.innerHTML = categories.map(c => `
+          <li><a href="#products" onclick="filterCategory('${c}')" class="hover:text-brand-400 transition-colors">${c}</a></li>
+        `).join('');
       }
 
       // Fetch Products
