@@ -1,0 +1,13 @@
+# Netlify Redirects for Minishop
+# This file ensures that clean URLs (like ukmstore.netlify.app/username) 
+# are correctly handled by index.html without a 404 error.
+
+# 1. Allow existing files to be served normally
+/auth.html          /auth.html          200
+/dashboard.html     /dashboard.html     200
+/index.html         /index.html         200
+/404.html           /404.html           200
+
+# 2. Redirect all other paths to index.html
+# This allows the JavaScript in index.html to parse the shop name from the path
+/*                  /index.html         200
