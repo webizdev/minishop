@@ -519,30 +519,38 @@
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhdndwbXZweGdja3JudWJucWV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxMjgyNzQsImV4cCI6MjA4MzcwNDI3NH0.M9yc7xf6v0_PqLomBI48v8UF5SncxK78Z9ZhUqsgVBU';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // PERSISTENT SHOP STATE
+    let currentShopUsername = null;
+
     // Handle smooth scroll for nav links (more robust version)
     document.addEventListener('click', function (e) {
       const anchor = e.target.closest('a');
       if (!anchor) return;
 
       const href = anchor.getAttribute('href');
+      // Only handle internal links that stay on the same page
       if (href && href.startsWith('#')) {
         const targetId = href;
         if (targetId === '#') return;
 
         const targetElement = document.querySelector(targetId);
         if (targetElement) {
+          // STOP EVERYTHING: prevent the browser from stripping the URL path
           e.preventDefault();
           e.stopPropagation();
 
-          // If the element is hidden (like help sections), we might need to wait? 
-          // But usually they are shown when shop loads.
+          // Scroll to target smoothly
           targetElement.scrollIntoView({
             behavior: 'smooth',
             block: 'start'
           });
+
+          // Optional: update hash without full navigation
+          // history.pushState(null, null, targetId);
+          return false;
         }
       }
-    }, true); // Use capture phase to catch clicks early
+    }, true); // Capture phase is critical to intercept before browser translates the base URL
 
     // Initial Data Placeholders
     let products = [];
@@ -571,18 +579,39 @@
 
     // Get Shop ID from URL (?shop=username)
     function getShopUsername() {
-      // 1. Check Query Param (?shop=username)
+      // 1. Try to get from cached variable (fastest)
+      if (currentShopUsername) return currentShopUsername;
+
+      // 2. Try to get from sessionStorage (backup for reloads/navigation glitches)
+      const sessionShop = sessionStorage.getItem('minishop_last_username');
+
+      // 3. Check Query Param (?shop=username)
       const urlParams = new URLSearchParams(window.location.search);
       const queryShop = urlParams.get('shop');
-      if (queryShop) return queryShop;
+      if (queryShop) {
+        currentShopUsername = queryShop;
+        sessionStorage.setItem('minishop_last_username', queryShop);
+        return queryShop;
+      }
 
-      // 2. Clean URL support: domain.com/minishop/username
-      // Ignore hash in pathname (pathname doesn't have hash, but let's be safe)
+      // 4. Clean URL support: domain.com/minishop/username
       const path = window.location.pathname;
       const ignore = ['minishop', 'index.html', 'dashboard.html', 'auth.html', '404.html'];
       const pathParts = path.split('/').filter(p => p && !ignore.includes(p.toLowerCase()));
 
-      return pathParts.length > 0 ? pathParts[pathParts.length - 1] : null;
+      if (pathParts.length > 0) {
+        currentShopUsername = pathParts[pathParts.length - 1];
+        sessionStorage.setItem('minishop_last_username', currentShopUsername);
+        return currentShopUsername;
+      }
+
+      // 5. Fallback to session storage if we were just looking at a shop
+      if (sessionShop && path.includes('/minishop/')) {
+        currentShopUsername = sessionShop;
+        return sessionShop;
+      }
+
+      return null;
     }
 
     // Load store data from Supabase
