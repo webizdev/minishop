@@ -1,0 +1,21 @@
+# Minishop URL Rewrite
+# Place this file in your root directory (where index.html is located)
+
+RewriteEngine On
+
+# If your shop is in a subfolder (e.g., domain.com/minishop/), 
+# uncomment the line below and change / to /minishop/
+# RewriteBase /
+
+# 1. Skip rewrite for existing files and folders (CSS, JS, Images, etc)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# 2. Skip rewrite for auth.html and dashboard.html
+RewriteCond %{REQUEST_URI} ^/(auth|dashboard)\.html [NC]
+RewriteRule ^ - [L]
+
+# 3. Rewrite /username to index.html?shop=username
+# This allows clean URLs like: domain.com/hijab_cantik
+RewriteRule ^([^/]+)/?$ index.html?shop=$1 [L,QSA]

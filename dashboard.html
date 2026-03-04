@@ -431,7 +431,7 @@
                     renderCategories(categories);
 
                     const shopLink = document.getElementById('shopLink');
-                    shopLink.href = `./?shop=${data.username}`;
+                    shopLink.href = data.username;
                     shopLink.classList.remove('hidden');
                     shopLink.classList.add('flex');
 

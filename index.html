@@ -12,6 +12,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
   <script>
+    // Dynamic Base for Clean URLs (supports subpaths like /username)
+    if (window.location.host) {
+      const currentPath = window.location.pathname;
+      const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+      document.write('<base href="' + window.location.origin + basePath + '">');
+    }
+  </script>
+  <script>
     tailwind.config = {
       theme: {
         extend: {
@@ -599,7 +607,12 @@
     // Get Shop ID from URL (?shop=username)
     function getShopUsername() {
       const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('shop');
+      const queryShop = urlParams.get('shop');
+      if (queryShop) return queryShop;
+
+      // Clean URL support: domain.com/username
+      const pathParts = window.location.pathname.split('/').filter(p => p && p !== 'index.html');
+      return pathParts.length > 0 ? pathParts[pathParts.length - 1] : null;
     }
 
     // Load store data from Supabase
