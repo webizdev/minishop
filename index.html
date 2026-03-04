@@ -1018,7 +1018,7 @@
       }
 
       const totalPrice = cart.reduce((sum, item) => sum + (item.finalPrice * item.quantity), 0);
-      let message = `Halo Kak admin dari ${currentShopData.shop_name}, saya mau order:\n\n`;
+      let message = `Halo Admin ${currentShopData.shop_name}, saya mau order:\n\n`;
 
       cart.forEach(item => {
         message += `• ${item.name} x${item.quantity} - ${formatPrice(item.finalPrice * item.quantity)}\n`;
